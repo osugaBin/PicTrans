@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Show editor, hide upload
                     uploadSection.classList.add('hidden');
                     editorSection.classList.remove('hidden');
+                    newUploadBtn.classList.remove('hidden');
                     
                     // Initial Draw
                     resetEditor();
@@ -205,6 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show upload section, hide editor
         uploadSection.classList.remove('hidden');
         editorSection.classList.add('hidden');
+        newUploadBtn.classList.add('hidden');
         
         // Trigger file input click
         setTimeout(() => {
