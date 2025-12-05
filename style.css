@@ -22,6 +22,8 @@
     --border: rgba(100, 116, 139, 0.2);
     --glass-border: rgba(0, 0, 0, 0.1);
     --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --scrollbar-thumb: #64748b;
+    --scrollbar-track: #e2e8f0;
 }
 
 * {
@@ -322,6 +324,34 @@ input[type=range]::-webkit-slider-thumb:hover {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    border: 2px solid var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg-color);
+}
+
 /* Light theme specific adjustments */
 [data-theme="light"] .upload-box {
     background: var(--card-bg);
@@ -343,6 +373,24 @@ input[type=range]::-webkit-slider-thumb:hover {
 
 [data-theme="light"] .theme-toggle {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Light theme scrollbar specific styling */
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 2px solid var(--scrollbar-track);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+[data-theme="light"] * {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 /* Responsive */
