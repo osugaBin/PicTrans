@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scaleValueDisplay = document.getElementById('scaleValue');
     const resetBtn = document.getElementById('resetBtn');
     const downloadBtn = document.getElementById('downloadBtn');
+    const newUploadBtn = document.getElementById('newUploadBtn');
 
     let originalImage = null;
     let originalWidth = 0;
@@ -119,6 +120,44 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clean up the object URL
             setTimeout(() => URL.revokeObjectURL(link.href), 100);
         }, `image/${originalFileType}`, originalFileType === 'png' ? 1.0 : 0.95);
+    });
+
+    // Handle New Upload
+    newUploadBtn.addEventListener('click', () => {
+        // Clear the file input to allow selecting the same file again
+        imageInput.value = '';
+        
+        // Reset all variables
+        originalImage = null;
+        originalWidth = 0;
+        originalHeight = 0;
+        currentScale = 100;
+        originalFileName = 'image';
+        originalFileType = 'png';
+        originalFileSize = 0;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Reset displays
+        originalSizeDisplay.textContent = '0 x 0';
+        originalFileSizeDisplay.textContent = '0 KB';
+        scaleDisplay.textContent = '100%';
+        newSizeDisplay.textContent = '0 x 0';
+        newFileSizeDisplay.textContent = '计算中...';
+        
+        // Reset slider
+        scaleSlider.value = 100;
+        scaleValueDisplay.textContent = '100%';
+        
+        // Show upload section, hide editor
+        uploadSection.classList.remove('hidden');
+        editorSection.classList.add('hidden');
+        
+        // Trigger file input click
+        setTimeout(() => {
+            imageInput.click();
+        }, 300);
     });
 
     function resetEditor() {

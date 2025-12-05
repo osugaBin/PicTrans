@@ -45,11 +45,21 @@
             </div>
 
             <div class="editor-section hidden" id="editorSection">
-                <div class="preview-container">
-                    <canvas id="imageCanvas"></canvas>
-                </div>
+                <button class="new-upload-btn" id="newUploadBtn" aria-label="上传新图片">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>新图片</span>
+                </button>
+                
+                <div class="editor-content">
+                    <div class="preview-container">
+                        <canvas id="imageCanvas"></canvas>
+                    </div>
 
-                <div class="controls-container">
+                    <div class="controls-container">
                     <div class="info-panel">
                         <div class="info-item">
                             <span class="label">原始尺寸</span>
