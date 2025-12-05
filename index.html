@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicTrans - 高质量图片调整工具</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>PicTrans</h1>
+            <p>优雅的图片调整工具</p>
+        </header>
+
+        <main>
+            <div class="upload-section" id="uploadSection">
+                <input type="file" id="imageInput" accept="image/*" hidden>
+                <label for="imageInput" class="upload-box">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <span>点击上传图片</span>
+                    <small>支持 JPG, PNG, WEBP 格式</small>
+                </label>
+            </div>
+
+            <div class="editor-section hidden" id="editorSection">
+                <div class="preview-container">
+                    <canvas id="imageCanvas"></canvas>
+                </div>
+
+                <div class="controls-container">
+                    <div class="info-panel">
+                        <div class="info-item">
+                            <span class="label">原始尺寸</span>
+                            <span class="value" id="originalSize">0 x 0</span>
+                            <small class="file-size" id="originalFileSize">0 KB</small>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">缩放比例</span>
+                            <span class="value" id="scaleDisplay">100%</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">新尺寸</span>
+                            <span class="value" id="newSize">0 x 0</span>
+                            <small class="file-size" id="newFileSize">计算中...</small>
+                        </div>
+                    </div>
+
+                    <div class="slider-control">
+                        <div class="slider-header">
+                            <label for="scaleSlider">缩放调整</label>
+                            <span id="scaleValue">100%</span>
+                        </div>
+                        <input type="range" id="scaleSlider" min="1" max="200" value="100" step="1">
+                        <div class="slider-track-bg"></div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="resetBtn" class="btn secondary">重置</button>
+                        <button id="downloadBtn" class="btn primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            下载图片
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
