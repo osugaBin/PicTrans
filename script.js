@@ -1,4 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('PicTrans loaded successfully');
+    
+    // Check if all required elements exist
+    const elementsToCheck = [
+        'themeToggle',
+        'imageInput', 
+        'uploadSection',
+        'editorSection',
+        'imageCanvas',
+        'originalSize',
+        'newSize',
+        'originalFileSize',
+        'newFileSize',
+        'scaleDisplay',
+        'scaleSlider',
+        'scaleValue',
+        'resetBtn',
+        'downloadBtn',
+        'newUploadBtn'
+    ];
+    
+    elementsToCheck.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            console.log(`✓ Element found: ${id}`);
+        } else {
+            console.error(`✗ Element missing: ${id}`);
+        }
+    });
+    
     // Theme Toggle Elements
     const themeToggle = document.getElementById('themeToggle');
     const htmlElement = document.documentElement;
@@ -54,10 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
 
     // Theme toggle event listener
-    themeToggle.addEventListener('click', toggleTheme);
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+        console.log('Theme toggle button initialized');
+    } else {
+        console.error('Theme toggle button not found');
+    }
 
     // Handle File Upload
-    imageInput.addEventListener('change', (e) => {
+    if (imageInput) {
+        imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
             // Store original file size
@@ -96,22 +132,34 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(file);
         }
-    });
+        });
+    } else {
+        console.error('Image input not found');
+    }
 
     // Handle Slider Change
-    scaleSlider.addEventListener('input', (e) => {
+    if (scaleSlider) {
+        scaleSlider.addEventListener('input', (e) => {
         currentScale = parseInt(e.target.value);
         scaleValueDisplay.textContent = `${currentScale}%`;
         updateCanvas();
-    });
+        });
+    } else {
+        console.error('Scale slider not found');
+    }
 
     // Handle Reset
-    resetBtn.addEventListener('click', () => {
-        resetEditor();
-    });
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            resetEditor();
+        });
+    } else {
+        console.error('Reset button not found');
+    }
 
     // Handle Download
-    downloadBtn.addEventListener('click', () => {
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
         canvas.toBlob((blob) => {
             const link = document.createElement('a');
             link.download = `${originalFileName}_resized.${originalFileType}`;
@@ -120,10 +168,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clean up the object URL
             setTimeout(() => URL.revokeObjectURL(link.href), 100);
         }, `image/${originalFileType}`, originalFileType === 'png' ? 1.0 : 0.95);
-    });
+        });
+    } else {
+        console.error('Download button not found');
+    }
 
     // Handle New Upload
-    newUploadBtn.addEventListener('click', () => {
+    if (newUploadBtn) {
+        newUploadBtn.addEventListener('click', () => {
         // Clear the file input to allow selecting the same file again
         imageInput.value = '';
         
@@ -158,7 +210,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             imageInput.click();
         }, 300);
-    });
+        });
+        console.log('New upload button initialized');
+    } else {
+        console.error('New upload button not found');
+    }
 
     function resetEditor() {
         currentScale = 100;

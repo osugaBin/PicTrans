@@ -158,7 +158,7 @@ header p {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: var(--shadow);
-    z-index: 100;
+    z-index: 1001;
     gap: 0.25rem;
 }
 
