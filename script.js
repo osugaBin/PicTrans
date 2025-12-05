@@ -1,35 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme management
+    // Theme Toggle Elements
     const themeToggle = document.getElementById('themeToggle');
-    const sunIcon = themeToggle.querySelector('.sun-icon');
-    const moonIcon = themeToggle.querySelector('.moon-icon');
+    const htmlElement = document.documentElement;
     
-    // Check for saved theme preference or default to dark mode
-    const currentTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    updateThemeIcon(currentTheme);
-    
-    // Theme toggle functionality
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-    });
-    
-    function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-            sunIcon.style.display = 'block';
-            moonIcon.style.display = 'none';
-        } else {
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        }
-    }
-
-    // Image processing variables
+    // Image Processing Elements
     const imageInput = document.getElementById('imageInput');
     const uploadSection = document.getElementById('uploadSection');
     const editorSection = document.getElementById('editorSection');
@@ -53,6 +27,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let originalFileName = 'image';
     let originalFileType = 'png';
     let originalFileSize = 0;
+
+    // Theme Management
+    function initTheme() {
+        // Check for saved theme preference or default to dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Add a small animation effect
+        themeToggle.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            themeToggle.style.transform = 'scale(1)';
+        }, 150);
+    }
+
+    // Initialize theme on page load
+    initTheme();
+
+    // Theme toggle event listener
+    themeToggle.addEventListener('click', toggleTheme);
 
     // Handle File Upload
     imageInput.addEventListener('change', (e) => {
