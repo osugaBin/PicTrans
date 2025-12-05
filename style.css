@@ -210,6 +210,10 @@ header p {
     position: relative;
 }
 
+[data-theme="light"] .preview-container {
+    background: rgba(0, 0, 0, 0.05);
+}
+
 canvas {
     max-width: 100%;
     max-height: 500px;
@@ -230,6 +234,10 @@ canvas {
     border-radius: 1rem;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+[data-theme="light"] .info-panel {
+    background: rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 600px) {
@@ -276,6 +284,10 @@ input[type=range] {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     outline: none;
+}
+
+[data-theme="light"] input[type=range] {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 input[type=range]::-webkit-slider-thumb {
