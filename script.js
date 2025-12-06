@@ -1,58 +1,17 @@
 // Global function for new upload to work with inline onclick
 function handleNewUpload() {
-    console.log('New upload button clicked via inline function');
+    console.log('New upload button clicked - staying in editor mode');
     
-    // Get elements
+    // Get image input element
     const imageInput = document.getElementById('imageInput');
-    const uploadSection = document.getElementById('uploadSection');
-    const editorSection = document.getElementById('editorSection');
-    const canvas = document.getElementById('imageCanvas');
-    const ctx = canvas.getContext('2d');
     
     // Clear the file input to allow selecting the same file again
     if (imageInput) {
         imageInput.value = '';
         
-        // Reset all variables (they need to be global or accessed differently)
-        window.originalImage = null;
-        window.originalWidth = 0;
-        window.originalHeight = 0;
-        window.currentScale = 100;
-        window.originalFileName = 'image';
-        window.originalFileType = 'png';
-        window.originalFileSize = 0;
-        
-        // Clear canvas
-        if (canvas && ctx) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        
-        // Reset displays
-        const originalSizeDisplay = document.getElementById('originalSize');
-        const originalFileSizeDisplay = document.getElementById('originalFileSize');
-        const scaleDisplay = document.getElementById('scaleDisplay');
-        const newSizeDisplay = document.getElementById('newSize');
-        const newFileSizeDisplay = document.getElementById('newFileSize');
-        const scaleSlider = document.getElementById('scaleSlider');
-        const scaleValueDisplay = document.getElementById('scaleValue');
-        
-        if (originalSizeDisplay) originalSizeDisplay.textContent = '0 x 0';
-        if (originalFileSizeDisplay) originalFileSizeDisplay.textContent = '0 KB';
-        if (scaleDisplay) scaleDisplay.textContent = '100%';
-        if (newSizeDisplay) newSizeDisplay.textContent = '0 x 0';
-        if (newFileSizeDisplay) newFileSizeDisplay.textContent = '计算中...';
-        
-        if (scaleSlider) scaleSlider.value = 100;
-        if (scaleValueDisplay) scaleValueDisplay.textContent = '100%';
-        
-        // Show upload section, hide editor
-        if (uploadSection) uploadSection.classList.remove('hidden');
-        if (editorSection) editorSection.classList.add('hidden');
-        
-        // Trigger file input click
-        setTimeout(() => {
-            if (imageInput) imageInput.click();
-        }, 300);
+        // Trigger file input click immediately - don't reset the editor state
+        // This keeps the editor visible and just opens the file selector
+        if (imageInput) imageInput.click();
     }
 }
 
