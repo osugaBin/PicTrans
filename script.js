@@ -1,3 +1,61 @@
+// Global function for new upload to work with inline onclick
+function handleNewUpload() {
+    console.log('New upload button clicked via inline function');
+    
+    // Get elements
+    const imageInput = document.getElementById('imageInput');
+    const uploadSection = document.getElementById('uploadSection');
+    const editorSection = document.getElementById('editorSection');
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Clear the file input to allow selecting the same file again
+    if (imageInput) {
+        imageInput.value = '';
+        
+        // Reset all variables (they need to be global or accessed differently)
+        window.originalImage = null;
+        window.originalWidth = 0;
+        window.originalHeight = 0;
+        window.currentScale = 100;
+        window.originalFileName = 'image';
+        window.originalFileType = 'png';
+        window.originalFileSize = 0;
+        
+        // Clear canvas
+        if (canvas && ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        // Reset displays
+        const originalSizeDisplay = document.getElementById('originalSize');
+        const originalFileSizeDisplay = document.getElementById('originalFileSize');
+        const scaleDisplay = document.getElementById('scaleDisplay');
+        const newSizeDisplay = document.getElementById('newSize');
+        const newFileSizeDisplay = document.getElementById('newFileSize');
+        const scaleSlider = document.getElementById('scaleSlider');
+        const scaleValueDisplay = document.getElementById('scaleValue');
+        
+        if (originalSizeDisplay) originalSizeDisplay.textContent = '0 x 0';
+        if (originalFileSizeDisplay) originalFileSizeDisplay.textContent = '0 KB';
+        if (scaleDisplay) scaleDisplay.textContent = '100%';
+        if (newSizeDisplay) newSizeDisplay.textContent = '0 x 0';
+        if (newFileSizeDisplay) newFileSizeDisplay.textContent = '计算中...';
+        
+        if (scaleSlider) scaleSlider.value = 100;
+        if (scaleValueDisplay) scaleValueDisplay.textContent = '100%';
+        
+        // Show upload section, hide editor
+        if (uploadSection) uploadSection.classList.remove('hidden');
+        if (editorSection) editorSection.classList.add('hidden');
+        
+        // Trigger file input click
+        setTimeout(() => {
+            if (imageInput) imageInput.click();
+        }, 300);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('PicTrans loaded successfully');
     
@@ -23,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elementsToCheck.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            console.log(`✓ Element found: ${id}`);
+            console.log(`✓ Element found: ${id}`, element);
         } else {
             console.error(`✗ Element missing: ${id}`);
         }
@@ -51,13 +109,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('downloadBtn');
     const newUploadBtn = document.getElementById('newUploadBtn');
 
-    let originalImage = null;
-    let originalWidth = 0;
-    let originalHeight = 0;
-    let currentScale = 100;
-    let originalFileName = 'image';
-    let originalFileType = 'png';
-    let originalFileSize = 0;
+    // Make variables global for inline function access
+    window.originalImage = null;
+    window.originalWidth = 0;
+    window.originalHeight = 0;
+    window.currentScale = 100;
+    window.originalFileName = 'image';
+    window.originalFileType = 'png';
+    window.originalFileSize = 0;
+    
+    // Also keep local references for compatibility
+    let originalImage = window.originalImage;
+    let originalWidth = window.originalWidth;
+    let originalHeight = window.originalHeight;
+    let currentScale = window.currentScale;
+    let originalFileName = window.originalFileName;
+    let originalFileType = window.originalFileType;
+    let originalFileSize = window.originalFileSize;
 
     // Theme Management
     function initTheme() {
@@ -98,20 +166,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (file) {
             // Store original file size
             originalFileSize = file.size;
+            window.originalFileSize = file.size;
             
             // Extract original filename and type
             originalFileName = file.name.split('.').slice(0, -1).join('.');
+            window.originalFileName = originalFileName;
             const fileExtension = file.name.split('.').pop().toLowerCase();
             
             // Determine output format based on input format
             if (['jpg', 'jpeg'].includes(fileExtension)) {
                 originalFileType = 'jpeg';
+                window.originalFileType = 'jpeg';
             } else if (fileExtension === 'png') {
                 originalFileType = 'png';
+                window.originalFileType = 'png';
             } else if (fileExtension === 'webp') {
                 originalFileType = 'webp';
+                window.originalFileType = 'webp';
             } else {
                 originalFileType = 'png'; // Default to PNG for other formats
+                window.originalFileType = 'png';
             }
             
             const reader = new FileReader();
@@ -120,6 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 originalImage.onload = () => {
                     originalWidth = originalImage.width;
                     originalHeight = originalImage.height;
+                    window.originalImage = originalImage;
+                    window.originalWidth = originalWidth;
+                    window.originalHeight = originalHeight;
                     
                     // Show editor, hide upload
                     uploadSection.classList.add('hidden');
@@ -140,9 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Slider Change
     if (scaleSlider) {
         scaleSlider.addEventListener('input', (e) => {
-        currentScale = parseInt(e.target.value);
-        scaleValueDisplay.textContent = `${currentScale}%`;
-        updateCanvas();
+            currentScale = parseInt(e.target.value);
+            window.currentScale = currentScale;
+            scaleValueDisplay.textContent = `${currentScale}%`;
+            updateCanvas();
         });
     } else {
         console.error('Scale slider not found');
@@ -160,66 +238,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Download
     if (downloadBtn) {
         downloadBtn.addEventListener('click', () => {
-        canvas.toBlob((blob) => {
-            const link = document.createElement('a');
-            link.download = `${originalFileName}_resized.${originalFileType}`;
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            // Clean up the object URL
-            setTimeout(() => URL.revokeObjectURL(link.href), 100);
-        }, `image/${originalFileType}`, originalFileType === 'png' ? 1.0 : 0.95);
+            canvas.toBlob((blob) => {
+                const link = document.createElement('a');
+                link.download = `${window.originalFileName || originalFileName}_resized.${window.originalFileType || originalFileType}`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                // Clean up the object URL
+                setTimeout(() => URL.revokeObjectURL(link.href), 100);
+            }, `image/${window.originalFileType || originalFileType}`, (window.originalFileType || originalFileType) === 'png' ? 1.0 : 0.95);
         });
     } else {
         console.error('Download button not found');
     }
 
-    // Handle New Upload
-    if (newUploadBtn) {
-        newUploadBtn.addEventListener('click', () => {
-        // Clear the file input to allow selecting the same file again
-        imageInput.value = '';
-        
-        // Reset all variables
-        originalImage = null;
-        originalWidth = 0;
-        originalHeight = 0;
-        currentScale = 100;
-        originalFileName = 'image';
-        originalFileType = 'png';
-        originalFileSize = 0;
-        
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Reset displays
-        originalSizeDisplay.textContent = '0 x 0';
-        originalFileSizeDisplay.textContent = '0 KB';
-        scaleDisplay.textContent = '100%';
-        newSizeDisplay.textContent = '0 x 0';
-        newFileSizeDisplay.textContent = '计算中...';
-        
-        // Reset slider
-        scaleSlider.value = 100;
-        scaleValueDisplay.textContent = '100%';
-        
-        // Show upload section, hide editor
-        uploadSection.classList.remove('hidden');
-        editorSection.classList.add('hidden');
-        
-        // Trigger file input click
-        setTimeout(() => {
-            imageInput.click();
-        }, 300);
-        });
-        console.log('New upload button initialized');
-    } else {
-        console.error('New upload button not found');
-    }
+    console.log('New upload button using inline onclick handler');
 
     function resetEditor() {
         currentScale = 100;
-        scaleSlider.value = 100;
-        scaleValueDisplay.textContent = '100%';
+        window.currentScale = 100;
+        if (scaleSlider) scaleSlider.value = 100;
+        if (scaleValueDisplay) scaleValueDisplay.textContent = '100%';
         updateCanvas();
     }
 
@@ -232,16 +270,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateCanvas() {
-        if (!originalImage) return;
+        // Get current values from globals
+        const img = window.originalImage || originalImage;
+        const w = window.originalWidth || originalWidth;
+        const h = window.originalHeight || originalHeight;
+        const scale = window.currentScale || currentScale;
+        const fileSize = window.originalFileSize || originalFileSize;
+        
+        if (!img) return;
 
-        const newWidth = Math.floor(originalWidth * (currentScale / 100));
-        const newHeight = Math.floor(originalHeight * (currentScale / 100));
+        const newWidth = Math.floor(w * (scale / 100));
+        const newHeight = Math.floor(h * (scale / 100));
 
         // Update Info Display
-        originalSizeDisplay.textContent = `${originalWidth} x ${originalHeight}`;
-        originalFileSizeDisplay.textContent = formatFileSize(originalFileSize);
-        scaleDisplay.textContent = `${currentScale}%`;
-        newSizeDisplay.textContent = `${newWidth} x ${newHeight}`;
+        if (originalSizeDisplay) originalSizeDisplay.textContent = `${w} x ${h}`;
+        if (originalFileSizeDisplay) originalFileSizeDisplay.textContent = formatFileSize(fileSize);
+        if (scaleDisplay) scaleDisplay.textContent = `${scale}%`;
+        if (newSizeDisplay) newSizeDisplay.textContent = `${newWidth} x ${newHeight}`;
 
         // Resize Canvas
         canvas.width = newWidth;
@@ -255,12 +300,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, newWidth, newHeight);
         
         // Draw Image with high quality
-        ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+        ctx.drawImage(img, 0, 0, newWidth, newHeight);
 
         // Calculate and display estimated new file size
         canvas.toBlob((blob) => {
             const estimatedSize = blob.size;
-            newFileSizeDisplay.textContent = formatFileSize(estimatedSize);
-        }, `image/${originalFileType}`, originalFileType === 'png' ? 1.0 : 0.95);
+            if (newFileSizeDisplay) {
+                newFileSizeDisplay.textContent = formatFileSize(estimatedSize);
+            }
+        }, `image/${window.originalFileType || originalFileType}`, (window.originalFileType || originalFileType) === 'png' ? 1.0 : 0.95);
     }
 });
